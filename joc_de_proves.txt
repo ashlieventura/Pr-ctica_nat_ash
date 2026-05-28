@@ -29,7 +29,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
-resposta correcta: True
+resposta correcta: False
 
 Problema 5
 paraula: "abab"
