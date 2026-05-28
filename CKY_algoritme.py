@@ -37,7 +37,7 @@ def inicialitzacio(paraula, gramatica):
     # Omplim les tranformacions unitàries: Rj -> ai
     for i in range(n):
         ai = paraula[i]
-        for prod in gramatica['tranformacions']:
+        for prod in gramatica['transformacions']:
             if len(prod) == 2:  # producció unitària: (Rj, terminal)
                 Rj, terminal = prod
                 if terminal == ai:
@@ -77,7 +77,7 @@ def cyk_algoritme(paraula, gramatica):
     for l in range(2, n + 1):
         for i in range(n - l + 1):     # posició d'inici (ON ESTEM)
             for k in range(1, l):      # punt de tall
-                for prod in gramatica['tranformacions']:
+                for prod in gramatica['transformacions']:
                     if len(prod) == 3:  # producció binària: Rj -> Rb Rc
                         Rj, Rb, Rc = prod
                         j = simbols_index[Rj]

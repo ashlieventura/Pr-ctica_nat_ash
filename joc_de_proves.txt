@@ -1,0 +1,161 @@
+Problema 1
+paraula: "ab"
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [('S', 'A', 'B'), ('A', 'a'), ('B', 'b')]
+resposta correcta: True
+
+Problema 2
+paraula: "aa"
+simbols: ['S', 'A']
+inici: ['S']
+transformacions: [('S', 'A', 'A'), ('A', 'a')]
+resposta correcta: True
+
+Problema 3
+paraula: "abba"
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [('S', 'A', 'B'), ('A', 'a'), ('B', 'b')]
+resposta correcta: False
+
+Problema 4
+paraula: "aabb"
+simbols: ['S', 'X', 'A', 'B']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: True
+
+Problema 5
+paraula: "abab"
+simbols: ['S', 'X', 'A', 'B']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: True
+
+Problema 6
+paraula: "abaa"
+simbols: ['S', 'X', 'A', 'B']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: False
+
+Problema 7
+paraula: "ba"
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+('S', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: False
+
+Problema 8
+paraula: "bbb"
+simbols: ['S', 'A', 'B', 'X']
+inici: ['S']
+transformacions: [
+('S', 'B', 'X'),
+('X', 'B', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: True
+
+Problema 9
+paraula: "bb"
+simbols: ['S', 'A', 'B', 'X']
+inici: ['S']
+transformacions: [
+('S', 'B', 'X'),
+('X', 'B', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: False
+
+Problema 10
+paraula: "aaaa"
+simbols: ['S', 'X', 'A']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'A', 'A'),
+('A', 'a')
+]
+resposta correcta: True
+
+Problema 11
+paraula: "aaa"
+simbols: ['S', 'X', 'A']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'A', 'A'),
+('A', 'a')
+]
+resposta correcta: False
+
+Problema 12
+paraula: "ab"
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+('S', 'A', 'B'),
+('A', 'a'),
+('B', 'b'),
+('C', 'A', 'B')
+]
+resposta correcta: True
+
+Problema 13
+paraula: "ab"
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+('S', 'A', 'B'),
+('A', 'b'),
+('B', 'a')
+]
+resposta correcta: False
+
+Problema 14
+paraula: "abab"
+simbols: ['S', 'X', 'Y', 'A', 'B']
+inici: ['S']
+transformacions: [
+('S', 'X', 'Y'),
+('X', 'A', 'B'),
+('Y', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+resposta correcta: True
+
+Problema 15
+paraula: "aaaaaa"
+simbols: ['S', 'X', 'Y', 'A']
+inici: ['S']
+transformacions: [
+('S', 'X', 'Y'),
+('X', 'A', 'A'),
+('Y', 'X', 'X'),
+('A', 'a')
+]
+resposta correcta: True
