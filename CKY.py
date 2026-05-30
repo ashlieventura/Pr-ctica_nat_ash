@@ -69,9 +69,6 @@ class CKY:
         """
 
         P = (self._inicialitzar_taula(paraula))
-
-        # Mapa de símbol -> índex
-        simbols_index = self.gramatica.simbols_index
         
         # Índexs dels símbols d'inici
         index_simbols_inici = self.gramatica.index_simbols_inici
