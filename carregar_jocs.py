@@ -1,108 +1,83 @@
-from CKY_algoritme import cyk_algoritme
 import ast
 
+from gramatica import Gramatica
+from CKY import CKY
 
-def carregar_problemes(nombre_fichero):
-    problemes = []
 
-    with open(nombre_fichero, "r", encoding="utf-8") as f:
-        contenido = f.read()
+class TestRunner:
 
-    bloques = contenido.split("Problema ")
+    def __init__(self):
+        self.problemes = []
 
-    for bloque in bloques:
-        bloque = bloque.strip()
+    def carregar(self, fitxer):
 
-        if not bloque:
-            continue
+        self.problemes = []
+        with open(fitxer, "r", encoding="utf-8") as f:
+            contingut = f.read()
 
-        lineas = [
-            linea.strip()
-            for linea in bloque.splitlines()
-            if linea.strip()
-        ]
+        blocs = contingut.split("Problema ")
 
-        numero_problema = int(lineas[0])
+        for bloc in blocs:
 
-        paraula = ast.literal_eval(
-            lineas[1].split(":", 1)[1].strip()
-        )
+            bloc = bloc.strip()
+            if not bloc:
+                continue
 
-        simbols = ast.literal_eval(
-            lineas[2].split(":", 1)[1].strip()
-        )
+            lineas = [linea.strip() for linea in bloc.splitlines() if linea.strip()]
 
-        inici = ast.literal_eval(
-            lineas[3].split(":", 1)[1].strip()
-        )
+            numero_problema = int(lineas[0])
 
-        # -------- leer transformacions multilínea --------
-        idx = 4
+            paraula = ast.literal_eval(lineas[1].split(":", 1)[1].strip())
 
-        transformacions_text = (
-            lineas[idx]
-            .split(":", 1)[1]
-            .strip()
-        )
+            simbols = ast.literal_eval(lineas[2].split(":", 1)[1].strip())
 
-        idx += 1
+            inici = ast.literal_eval(lineas[3].split(":", 1)[1].strip())
 
-        while "]" not in transformacions_text:
-            transformacions_text += "\n" + lineas[idx]
+            # -------- llegir transformacions multilínia --------
+            idx = 4
+            transformacions_text = (lineas[idx].split(":", 1)[1].strip())
             idx += 1
 
-        transformacions = ast.literal_eval(
-            transformacions_text
-        )
+            while "]" not in transformacions_text:
+                transformacions_text += ("\n" + lineas[idx])
+                idx += 1
 
-        # -------- respuesta correcta opcional --------
-        resposta_correcta = None
+            transformacions = ast.literal_eval(transformacions_text)
 
-        if idx < len(lineas) and lineas[idx].startswith("resposta correcta:"):
-            resposta_correcta = ast.literal_eval(
-                lineas[idx].split(":", 1)[1].strip()
-            )
+            # -------- resposta correcta opcional --------
+            resposta_correcta = None
 
-        gramatica = {
-            'simbols': simbols,
-            'inici': inici,
-            'transformacions': transformacions
-        }
+            if (idx < len(lineas) and lineas[idx].startswith("resposta correcta:")):
+                resposta_correcta = ast.literal_eval(lineas[idx].split(":", 1)[1].strip())
 
-        problemes.append({
-            "numero": numero_problema,
-            "paraula": paraula,
-            "gramatica": gramatica,
-            "resposta_correcta": resposta_correcta
-        })
+            gramatica = Gramatica(simbols=simbols, inici=inici, transformacions=transformacions)
 
-    return problemes
+            self.problemes.append({
+                "numero": numero_problema,
+                "paraula": paraula,
+                "gramatica": gramatica,
+                "resposta_correcta": resposta_correcta
+            })
 
+    def executar(self):
 
-problemes = carregar_problemes("joc_de_proves.txt")
+        if not self.problemes:
+            print("No hi ha problemes carregats.")
+            return
 
-for problema in problemes:
+        for problema in self.problemes:
 
-    resultat = cyk_algoritme(
-        problema["paraula"],
-        problema["gramatica"]
-    )
+            cky = CKY(problema["gramatica"])
+            resultat = cky.accepta(problema["paraula"])
+            num = problema["numero"]
+            esperat = problema["resposta_correcta"]
 
-    num = problema["numero"]
-    esperat = problema["resposta_correcta"]
+            if esperat is not None:
 
-    if esperat is not None:
-        estat = "OK" if resultat == esperat else "ERROR"
+                estat = ("OK" if resultat == esperat else "ERROR")
 
-        print(
-            f"Problema {num} | "
-            f"Resultat: {resultat} | "
-            f"Resposta correcta: {esperat} | "
-            f"{estat}"
-        )
+                print(f"Problema {num} | Resultat: {resultat} | Resposta correcta: {esperat} | {estat}")
 
-    else:
-        print(
-            f"Problema {num} | "
-            f"Resultat: {resultat}"
-        )
+            else:
+                print(f"Problema {num} | Resultat: {resultat}")
+
