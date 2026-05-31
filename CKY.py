@@ -3,38 +3,25 @@ from gramatica import Gramatica
 
 class CKY:
     def __init__(self, gramatica: Gramatica):
+        """
+        Inicialitza l'algorisme CKY amb una gramàtica donada.
+        :param gramatica: Objecte de la classe Gramatica.
+        """
         self.gramatica = gramatica
 
     def _inicialitzar_taula(self, paraula):
         """
-    La funció inicialitza la taula P[n, n+1, r] per a l'algorisme CYK a partir
-    de una paraula (en format string) i una gramatica en aquest format:
-        {'simbols': ['S', 'A', 'B', ...], 
-        'inici': ['S'],                                    
-        'tranformacions': [('S', 'A', 'B'), ('A', 'a') ...]}
-    Retorna:
-    - P: llista de booleans de forma [n, n+1, r]
-        on index 0 (i) representa la posició d'inici de la subcadena
-        index 1 (l) representa la longitud de la subcadena (1-indexed)
-        index 2 (j) representa el símbol Rj de la gramàtica
-
-        P[i, l, j] = True  -->  el símbol Rj pot generar 
-                                la subcadena de longitud l 
-                                que comença a la posició i
-
-    """
+        Inicialitza la taula tridimensional P[n, n+1, r] per a l'algorisme CKY.
+        :param paraula: Paraula d'entrada (string o llista de símbols).
+        :return: Taula P de booleans, on P[i, l, j] indica si el símbol j pot generar la subcadena de longitud l que comença a i.
+        """
         n = len(paraula)
         r = len(self.gramatica.simbols)
-        
-        # Mapa de símbol -> índex
         simbols_index = self.gramatica.simbols_index
-
-        # Inicialitzem P[n, n+1, r] (n+1 per poder indexar longituds 1..n)
+        trans_terminals = self.gramatica.transformacions_terminals
         P = np.zeros((n, n + 1, r), dtype=bool)
 
-        trans_terminals = self.gramatica.transformacions_terminals
-
-        # Omplim les tranformacions unitàries: Rj -> ai
+        # Omple la taula per produccions terminals (A -> a)
         for i in range(n):
             ai = paraula[i]
             for prod in trans_terminals:
@@ -67,20 +54,18 @@ class CKY:
 
         Retorna True si la paraula és acceptada, False altrament.
         """
-
-        P = (self._inicialitzar_taula(paraula))
-        
-        # Índexs dels símbols d'inici
-        index_simbols_inici = self.gramatica.index_simbols_inici
-
         n = len(paraula)
-
+        if n == 0:
+            return any((s, ' ') in self.gramatica.transformacions for s in self.gramatica.inici)
+    
+        P = self._inicialitzar_taula(paraula)
+        index_simbols_inici = self.gramatica.index_simbols_inici
         trans_bi = self.gramatica.transformacions_binaries_indexades
 
-        # Subcadenes de longitud l (de 2 fins a n -> la longitud 1 s'han inicialitzat a l'anterior funció)
+        # Omple la taula per subcadenes de longitud >= 2
         for l in range(2, n + 1):
-            for i in range(n - l + 1):     # posició d'inici (ON ESTEM)
-                for k in range(1, l):      # punt de tall
+            for i in range(n - l + 1):
+                for k in range(1, l):
                     for j, b, c in trans_bi:
                         if P[i, k, b] and P[i + k, l - k, c]:
                             P[i, l, j] = True

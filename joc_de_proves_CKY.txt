@@ -159,3 +159,4 @@ transformacions: [
 ('A', 'a')
 ]
 resposta correcta: True
+
