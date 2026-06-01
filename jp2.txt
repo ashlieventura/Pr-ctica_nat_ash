@@ -118,7 +118,6 @@ transformacions: [('S', 'A', 'B'), ('A', ' '), ('B', ' ')]
 descripcio: paraula buida amb dos simbols anulables
 resposta correcta: True
 
-
 Problema 16
 paraula: "a"
 simbols: ['S', 'X', 'Y', 'A']

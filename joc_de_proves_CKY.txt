@@ -3,6 +3,7 @@ paraula: "ab"
 simbols: ['S', 'A', 'B']
 inici: ['S']
 transformacions: [('S', 'A', 'B'), ('A', 'a'), ('B', 'b')]
+descripcio: produccio binaria simple ab
 resposta correcta: True
 
 Problema 2
@@ -10,6 +11,7 @@ paraula: "aa"
 simbols: ['S', 'A']
 inici: ['S']
 transformacions: [('S', 'A', 'A'), ('A', 'a')]
+descripcio: mateixa produccio dues vegades aa
 resposta correcta: True
 
 Problema 3
@@ -17,6 +19,7 @@ paraula: "abba"
 simbols: ['S', 'A', 'B']
 inici: ['S']
 transformacions: [('S', 'A', 'B'), ('A', 'a'), ('B', 'b')]
+descripcio: paraula de longitud 4 que no pertany al llenguatge
 resposta correcta: False
 
 Problema 4
@@ -29,6 +32,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: dos nivells de produccions aabb no acceptat
 resposta correcta: False
 
 Problema 5
@@ -41,6 +45,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: repeticio de bloc ab acceptat
 resposta correcta: True
 
 Problema 6
@@ -53,6 +58,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: combinacio invalida abaa
 resposta correcta: False
 
 Problema 7
@@ -64,6 +70,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: ordre invers ba no acceptat
 resposta correcta: False
 
 Problema 8
@@ -76,6 +83,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: simbol inaccessible A present bbb acceptat
 resposta correcta: True
 
 Problema 9
@@ -88,6 +96,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: paraula massa curta bb no acceptat
 resposta correcta: False
 
 Problema 10
@@ -99,6 +108,7 @@ transformacions: [
 ('X', 'A', 'A'),
 ('A', 'a')
 ]
+descripcio: quatre as en arbre binari balancejat
 resposta correcta: True
 
 Problema 11
@@ -110,6 +120,7 @@ transformacions: [
 ('X', 'A', 'A'),
 ('A', 'a')
 ]
+descripcio: tres as no divisible en dos blocs iguals
 resposta correcta: False
 
 Problema 12
@@ -122,6 +133,7 @@ transformacions: [
 ('B', 'b'),
 ('C', 'A', 'B')
 ]
+descripcio: simbol C inaccessible des de S
 resposta correcta: True
 
 Problema 13
@@ -133,6 +145,7 @@ transformacions: [
 ('A', 'b'),
 ('B', 'a')
 ]
+descripcio: terminals intercanviats ab no acceptat
 resposta correcta: False
 
 Problema 14
@@ -146,6 +159,7 @@ transformacions: [
 ('A', 'a'),
 ('B', 'b')
 ]
+descripcio: dos simbols intermedis diferents abab acceptat
 resposta correcta: True
 
 Problema 15
@@ -158,5 +172,65 @@ transformacions: [
 ('Y', 'X', 'X'),
 ('A', 'a')
 ]
+descripcio: sis as en arbre de tres nivells
 resposta correcta: True
 
+Problema 16
+paraula: "a"
+simbols: ['S', 'A']
+inici: ['S']
+transformacions: [('S', 'A', 'A'), ('A', 'a')]
+descripcio: paraula massa curta per a produccio binaria
+resposta correcta: False
+
+Problema 17
+paraula: "aaaaaaa"
+simbols: ['S', 'X', 'A']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'A', 'A'),
+('A', 'a')
+]
+descripcio: set as longitud imparella no acceptat
+resposta correcta: False
+
+Problema 18
+paraula: "abcdabcd"
+simbols: ['S', 'X', 'Y', 'A', 'B', 'C', 'D']
+inici: ['S']
+transformacions: [
+('S', 'X', 'X'),
+('X', 'Y', 'Y'),
+('Y', 'A', 'B'),
+('A', 'a'),
+('B', 'b'),
+('C', 'c'),
+('D', 'd')
+]
+descripcio: simbols C i D inaccessibles paraula abab repetit
+resposta correcta: False
+
+Problema 19
+paraula: "ab"
+simbols: ['S', 'A', 'B']
+inici: ['S', 'A']
+transformacions: [
+('S', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+descripcio: multiples simbols inicials S i A accepta ab
+resposta correcta: True
+
+Problema 20
+paraula: "a"
+simbols: ['S', 'A', 'B']
+inici: ['S', 'A']
+transformacions: [
+('S', 'A', 'B'),
+('A', 'a'),
+('B', 'b')
+]
+descripcio: multiples simbols inicials A pot generar a directament
+resposta correcta: True

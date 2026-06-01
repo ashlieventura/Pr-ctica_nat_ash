@@ -28,7 +28,7 @@ class TestRunner:
 
         for bloc in blocs:
             bloc = bloc.strip()
-            
+
             if bloc:
 
                 lineas = [linea.strip() for linea in bloc.splitlines() if linea.strip()]
@@ -92,7 +92,7 @@ class TestRunner:
             desc_str = f" | {problema['descripcio']}" if problema["descripcio"] else ""
 
             if problema["error"]:
-                print(f"Problema {num}{desc_str}\n      ERROR DE GRAMÀTICA: {problema['error']}")
+                print(f"Problema {num}{desc_str}\n      ERROR DE GRAMÀTICA: {problema['error']}\n")
                 
             else:
                 cky = CKY(problema["gramatica"])
@@ -101,6 +101,6 @@ class TestRunner:
 
                 if esperat is not None:
                     estat = "OK" if resultat == esperat else "ERROR"
-                    print(f"Problema {num}{desc_str}\n      Resultat: {resultat} | Resposta correcta: {esperat} | {estat}")
+                    print(f"Problema {num}{desc_str}\n      Resultat: {resultat} | Resposta correcta: {esperat} | {estat}\n")
                 else:
-                    print(f"Problema {num}{desc_str}\n      Resultat: {resultat}")
+                    print(f"Problema {num}{desc_str}\n      Resultat: {resultat}\n")
