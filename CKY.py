@@ -76,4 +76,41 @@ class CKY:
 
 
 class ProbabilisticCKY(CKY):
-    pass
+    def _inicialitzar_taula_prob(self, paraula):    
+        n = len(paraula)
+        r = len(self.gramatica.simbols)
+        simbols_index = self.gramatica.simbols_index
+        trans_terminals = self.gramatica.transformacions_terminals
+        P = np.zeros((n, n + 1, r), dtype=float)
+
+        # Omple la taula per produccions terminals (A -> a) amb major probabilitat
+        for i in range(n):
+            ai = paraula[i]
+            for prod in trans_terminals:
+                Rj, terminal, prob = prod
+                if terminal == ai:
+                    j = simbols_index[Rj]
+                    if prob > P[i, 1, j]: # si la probabilitat de la nova producció cap aquest terminal és major a la que hi ha es canvia
+                        P[i, 1, j] = prob
+        return P
+        
+    def accepta_prob(self, paraula):
+        n = len(paraula)
+        if n == 0:
+            return any((s, ' ') in self.gramatica.transformacions for s in self.gramatica.inici)
+    
+        P = self._inicialitzar_taula(paraula)
+        index_simbols_inici = self.gramatica.index_simbols_inici
+        trans_bi = self.gramatica.transformacions_binaries_indexades # aquestes també tenen la probabilitat de cada una de les regles ( transformacions)
+
+        # Omple la taula per subcadenes de longitud >= 2
+        for l in range(2, n + 1):
+            for i in range(n - l + 1):
+                for k in range(1, l):
+                    for j, b, c, prob_cadena in trans_bi:
+                        prob = prob_cadena * P[i, k, b] * P[i + k, l - k, c] # es calcula la probabilitat de tota la regla 
+                        # si A -> B C  la prob = prob(A ->BC)* prob(B)* prob(C)
+                        if prob > P[i, l, j]:
+                            P[i, l, j] = prob
+        millor_prob = max(P[0, n, j] for j in index_simbols_inici) # de totes les solucions amb els simbols inicials possibles agafes el més probable
+        return millor_prob  
