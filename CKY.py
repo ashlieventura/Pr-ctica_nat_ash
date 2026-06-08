@@ -97,9 +97,9 @@ class ProbabilisticCKY(CKY):
     def accepta_prob(self, paraula):
         n = len(paraula)
         if n == 0:
-            return any((s, ' ') in self.gramatica.transformacions for s in self.gramatica.inici)
+                return 1.0 if any((s, ' ') in self.gramatica.transformacions for s in self.gramatica.inici) else 0.0
     
-        P = self._inicialitzar_taula(paraula)
+        P = self._inicialitzar_taula_prob(paraula)
         index_simbols_inici = self.gramatica.index_simbols_inici
         trans_bi = self.gramatica.transformacions_binaries_indexades # aquestes també tenen la probabilitat de cada una de les regles ( transformacions)
 
