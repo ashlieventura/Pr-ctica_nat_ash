@@ -16,7 +16,7 @@ class Gramatica:
 
         try:
             self._validar_gramatica()
-            if not self.es_cnf():
+            if not self._es_cnf():
                 self._convertir_a_cnf()
                 self.convertida = True
             self._validar_cnf()
@@ -28,6 +28,17 @@ class Gramatica:
         self._indexar_transformacions_binaries()  # Indexa produccions binàries
 
 
+
+    @property
+    def transformacions(self):
+        return self._transformacions
+
+    @transformacions.setter
+    def transformacions(self, valor):
+        self._transformacions = valor
+        self._trans_per_esquerra = {}
+        for prod in valor:
+            self._trans_per_esquerra.setdefault(prod[0], []).append(prod)
 
     def _crear_index(self):
         """
@@ -76,13 +87,28 @@ class Gramatica:
         return len(produccio) == 3
 
 
-    def es_cnf(self):
-        """Comprova si la gramàtica ja està en CNF."""
-        try:
-            self._validar_cnf()
-            return True
-        except ValueError:
+    def _es_cnf(self):
+        """Retorna True si la gramàtica compleix CNF, False altrament."""
+        if not self.inici:
             return False
+        for s in self.inici:
+            if s not in self.simbols:
+                return False
+        for prod in self.transformacions:
+            if prod[0] not in self.simbols:
+                return False
+            if len(prod) == 2:
+                terminal = prod[1]
+                if terminal == ' ' and prod[0] not in self.inici:
+                    return False
+                if terminal in self.simbols:
+                    return False
+            elif len(prod) == 3:
+                if any(s not in self.simbols for s in prod[1:]):
+                    return False
+            else:
+                return False
+        return True
 
 
     def _validar_gramatica(self):
@@ -180,14 +206,13 @@ class Gramatica:
 
             while cua:
                 actual = cua.pop()
-                for prod in self.transformacions:
-                    if prod[0] == actual:
-                        if len(prod) == 2 and prod[1] in no_terminals:
-                            if prod[1] not in visitats:
-                                visitats.add(prod[1])
-                                cua.append(prod[1])
-                        else:
-                            noves_trans.add((origen,) + prod[1:])
+                for prod in self._trans_per_esquerra.get(actual, []):
+                    if len(prod) == 2 and prod[1] in no_terminals:
+                        if prod[1] not in visitats:
+                            visitats.add(prod[1])
+                            cua.append(prod[1])
+                    else:
+                        noves_trans.add((origen,) + prod[1:])
 
         self.transformacions = noves_trans
                 
@@ -208,12 +233,11 @@ class Gramatica:
         cua = list(self.inici)
         while cua:
             actual = cua.pop()
-            for prod in self.transformacions:
-                if prod[0] == actual:
-                    for s in prod[1:]:
-                        if s in self.simbols and s not in accessibles:
-                            accessibles.add(s)
-                            cua.append(s)
+            for prod in self._trans_per_esquerra.get(actual, []):
+                for s in prod[1:]:
+                    if s in self.simbols and s not in accessibles:
+                        accessibles.add(s)
+                        cua.append(s)
 
         utils = productius.intersection(accessibles)
         simbols_originals = self.simbols
@@ -324,14 +348,13 @@ class GramaticaProbabilistica(Gramatica):
         # _prob_map: (esquerra, *dreta) -> prob  i s'actualitza a cada pas.
         self._prob_map = {}
         trans_sense_prob = []
- 
+
         for prod in transformacions:
             if isinstance(prod[-1], float):
                 prob = prod[-1]
                 prod_sense = prod[:-1]
             else:
-                prob = 1.0
-                prod_sense = prod
+                raise ValueError(f"La produccio {prod} no te probabilitat. Totes les produccions d'una GramaticaProbabilistica han d'acabar amb un float.")
             trans_sense_prob.append(prod_sense)
             self._prob_map[prod_sense] = prob
  
@@ -345,7 +368,7 @@ class GramaticaProbabilistica(Gramatica):
         try:
             self._validar_gramatica()
             self._validar_probabilitats()
-            if not self.es_cnf():
+            if not self._es_cnf():
                 self._convertir_a_cnf_prob()
                 self.convertida = True
             self._validar_cnf()
@@ -369,17 +392,13 @@ class GramaticaProbabilistica(Gramatica):
         sumes = {}
         for prod, prob in self._prob_map.items():
             if not (0.0 <= prob <= 1.0):
-                raise ValueError(
-                    f"La probabilitat {prob} de la produccio {prod} ha de ser entre 0 i 1."
-                )
+                raise ValueError(f"La probabilitat {prob} de la produccio {prod} ha de ser entre 0 i 1.")
             esquerra = prod[0]
             sumes[esquerra] = sumes.get(esquerra, 0.0) + prob
  
         for simbol, suma in sumes.items():
             if abs(suma - 1.0) > 1e-6:
-                raise ValueError(
-                    f"Les probabilitats del simbol '{simbol}' sumen {suma:.6f}, han de sumar 1.0."
-                )
+                raise ValueError(f"Les probabilitats del simbol '{simbol}' sumen {suma:.6f}, han de sumar 1.0.")
  
     # ------------------------------------------------------------------
     # Conversio a CNF amb propagacio de probabilitats
@@ -410,24 +429,34 @@ class GramaticaProbabilistica(Gramatica):
             if len(prod) == 2 and prod[1] == ' ':
                 prob_eps[prod[0]] = prob_eps.get(prod[0], 0.0) + prob
  
-        # Propagacio: A -> B C on B i C son anulables
-        # Iterem fins a convergencia
+        # Propagacio: A -> B C ... on tots els simbols de la dreta son anulables.
+        # Iterem fins a convergencia RECALCULANT prob_eps des de zero a cada
+        # iteracio (acumular sobre el valor anterior faria créixer la prob
+        # sense limit quan una produccio té tota la dreta anulable).
         canvi = True
         while canvi:
             canvi = False
+            nou_prob_eps = {}
             for prod, prob in self._prob_map.items():
                 esquerra = prod[0]
                 dreta = prod[1:]
-                if dreta and all(s in prob_eps for s in dreta):
+                if len(prod) == 2 and prod[1] == ' ':
+                    # epsilon directa
+                    nou_prob_eps[esquerra] = nou_prob_eps.get(esquerra, 0.0) + prob
+                elif dreta and all(s in prob_eps for s in dreta):
                     # prob que tots els simbols de la dreta generin epsilon
-                    contribucio = prob * 1.0
+                    contribucio = prob
                     for s in dreta:
                         contribucio *= prob_eps[s]
-                    antiga = prob_eps.get(esquerra, 0.0)
-                    nova = antiga + contribucio
-                    if abs(nova - antiga) > 1e-12:
-                        prob_eps[esquerra] = nova
-                        canvi = True
+                    nou_prob_eps[esquerra] = nou_prob_eps.get(esquerra, 0.0) + contribucio
+
+            # Comprovem convergencia comparant amb la iteracio anterior
+            claus = set(prob_eps) | set(nou_prob_eps)
+            for k in claus:
+                if abs(nou_prob_eps.get(k, 0.0) - prob_eps.get(k, 0.0)) > 1e-12:
+                    canvi = True
+                    break
+            prob_eps = nou_prob_eps
  
         anulables = set(prob_eps.keys())
  

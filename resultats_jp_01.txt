@@ -1,0 +1,153 @@
+Problema 1 | epsilon directa: S->epsilon accepta paraula buida
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> ' '
+  Paraula: ''
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 2 | epsilon via unitaria S->A->epsilon
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> ' '
+  Paraula: ''
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 3 | B anulable: accepta 'ab' i tambe 'a'
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B
+  S -> a
+  A -> a
+  B -> b
+  Paraula: 'ab'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 4 | B sempre buit: 'a' acceptat
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> a
+  A -> a
+  Paraula: 'a'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 5 | dos anulables: paraula buida acceptada
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> ' '
+  Paraula: ''
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 6 | unitaria simple S->A->a
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> a
+  Paraula: 'a'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 7 | cadena d'unitaries S->A->B->a
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> a
+  Paraula: 'a'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 8 | unitaria barrejada amb binaria
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B
+  A -> a
+  B -> b
+  Paraula: 'ab'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 9 | C inaccessible des de S, no afecta
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B
+  A -> a
+  B -> b
+  C -> A B
+  Paraula: 'ab'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 10 | A inaccessible, bbb acceptat
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> B X
+  A -> a
+  B -> b
+  X -> B B
+  Paraula: 'bbb'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 11 | C i D inutils, ab acceptat
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B
+  A -> a
+  B -> b
+  C -> c
+  D -> C C
+  Paraula: 'ab'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 12 | produccio longitud 3 binaritzada
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A X_1
+  A -> a
+  B -> b
+  C -> c
+  X_1 -> B C
+  Paraula: 'abc'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 13 | produccio longitud 4 binaritzada
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A X_1
+  A -> a
+  B -> b
+  C -> c
+  D -> d
+  X_1 -> B X_2
+  X_2 -> C D
+  Paraula: 'abcd'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 14 | terminal barrejat amb no-terminal
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A A
+  A -> a
+  Paraula: 'aa'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 15 | epsilon al mig + binaritzacio combinades
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A C
+  A -> a
+  C -> c
+  Paraula: 'ac'
+  Resultat: True | Resposta correcta: True | OK
+
+Problema 16 | epsilon i binaritzacio, paraula ab
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A C
+  A -> a
+  C -> b
+  Paraula: 'ab'
+  Resultat: True | Resposta correcta: True | OK
+

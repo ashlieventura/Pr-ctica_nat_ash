@@ -1,0 +1,141 @@
+Problema 1 | B anulable [0.4]: 'a' usa S->A renormalitzat
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B        [0.6000]
+  S -> a          [0.4000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  Paraula: 'a'
+  Resultat: 0.400000 | Resposta correcta: 0.400000 | OK
+
+Problema 2 | epsilon directa prob 1.0
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> ' '        [1.0000]
+  Paraula: ''
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 3 | B anulable: 'ab' usa S->AB, B->b renormalitzat a 1.0
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B        [0.6000]
+  S -> a          [0.4000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  Paraula: 'ab'
+  Resultat: 0.600000 | Resposta correcta: 0.600000 | OK
+
+Problema 4 | DOS anulables A i B: cas que abans penjava
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> ' '        [0.2500]
+  S -> A B        [0.2500]
+  S -> a          [0.2500]
+  S -> b          [0.2500]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  Paraula: 'a'
+  Resultat: 0.250000 | Resposta correcta: 0.250000 | OK
+
+Problema 5 | dos anulables, paraula 'ab'
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> ' '        [0.2500]
+  S -> A B        [0.2500]
+  S -> a          [0.2500]
+  S -> b          [0.2500]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  Paraula: 'ab'
+  Resultat: 0.250000 | Resposta correcta: 0.250000 | OK
+
+Problema 6 | cadena unitaria S->A->B->a, tot 1.0
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> a          [1.0000]
+  Paraula: 'a'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 7 | unitaria S->A[0.8]->a: resultat 0.8
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> a          [0.8000]
+  S -> b          [0.2000]
+  Paraula: 'a'
+  Resultat: 0.800000 | Resposta correcta: 0.800000 | OK
+
+Problema 8 | unitaria cap a binaria S->A->(B C)
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> B C        [1.0000]
+  B -> b          [1.0000]
+  C -> c          [1.0000]
+  Paraula: 'bc'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 9 | unitaria S->A[0.7]->BC vs S->BC[0.3] directa, max
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> B C        [1.0000]
+  B -> b          [1.0000]
+  C -> c          [1.0000]
+  Paraula: 'bc'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 10 | terminal barrejat: 'a' dins prod llarga -> T_x amb prob 1.0
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A T_1      [1.0000]
+  A -> a          [1.0000]
+  T_1 -> a          [1.0000]
+  Paraula: 'aa'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 11 | binaritzacio longitud 3 amb prob
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A X_1      [1.0000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  C -> c          [1.0000]
+  X_1 -> B C        [1.0000]
+  Paraula: 'abc'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 12 | binaritzacio longitud 4 amb prob
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A X_1      [1.0000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  C -> c          [1.0000]
+  D -> d          [1.0000]
+  X_1 -> B X_2      [1.0000]
+  X_2 -> C D        [1.0000]
+  Paraula: 'abcd'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+
+Problema 13 | epsilon al mig + binaritzacio, paraula 'ac'
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A C        [0.5000]
+  S -> A X_1      [0.5000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  C -> c          [1.0000]
+  X_1 -> B C        [1.0000]
+  Paraula: 'ac'
+  Resultat: 0.500000 | Resposta correcta: 0.500000 | OK
+

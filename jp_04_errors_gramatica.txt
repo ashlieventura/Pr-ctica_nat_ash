@@ -1,0 +1,72 @@
+Problema 1
+paraula: 'ab'
+simbols: ['S', 'A']
+inici: []
+transformacions: [
+  ('S', 'A', 'B')
+]
+descripcio: inici buit -> error
+
+Problema 2
+paraula: 'a'
+simbols: ['S']
+inici: ['S']
+transformacions: [
+
+]
+descripcio: transformacions buides -> error
+
+Problema 3
+paraula: 'ab'
+simbols: ['A', 'B']
+inici: ['S']
+transformacions: [
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: simbol inicial 'S' no esta a simbols -> error
+
+Problema 4
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S', 'Z']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: segon inicial 'Z' no esta a simbols -> error
+
+Problema 5
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 0.5),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0)
+]
+descripcio: probabilitats de S no sumen 1.0 -> error
+
+Problema 6
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.5),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0)
+]
+descripcio: probabilitat 1.5 fora de rang -> error
+
+Problema 7
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', -0.2),
+  ('S', 'A', 'A', 1.2),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0)
+]
+descripcio: probabilitat negativa fora de rang -> error

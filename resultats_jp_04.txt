@@ -1,0 +1,21 @@
+Problema 1 | inici buit -> error
+      ERROR DE GRAMÀTICA: Error a la gramàtica: La llista de símbols inicials és buida.
+
+Problema 2 | transformacions buides -> error
+      ERROR DE GRAMÀTICA: Error a la gramàtica: La llista de transformacions és buida.
+
+Problema 3 | simbol inicial 'S' no esta a simbols -> error
+      ERROR DE GRAMÀTICA: Error a la gramàtica: Símbol inicial 'S' no està a la llista de símbols.
+
+Problema 4 | segon inicial 'Z' no esta a simbols -> error
+      ERROR DE GRAMÀTICA: Error a la gramàtica: Símbol inicial 'Z' no està a la llista de símbols.
+
+Problema 5 | probabilitats de S no sumen 1.0 -> error
+      ERROR DE GRAMÀTICA: Error a la gramatica: Les probabilitats del simbol 'S' sumen 0.500000, han de sumar 1.0.
+
+Problema 6 | probabilitat 1.5 fora de rang -> error
+      ERROR DE GRAMÀTICA: Error a la gramatica: La probabilitat 1.5 de la produccio ('S', 'A', 'B') ha de ser entre 0 i 1.
+
+Problema 7 | probabilitat negativa fora de rang -> error
+      ERROR DE GRAMÀTICA: Error a la gramatica: La probabilitat -0.2 de la produccio ('S', 'A', 'B') ha de ser entre 0 i 1.
+
