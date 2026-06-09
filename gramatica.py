@@ -12,10 +12,13 @@ class Gramatica:
         self.inici = inici
         self.transformacions = set(transformacions)
 
+        self.convertida = False
+
         try:
             self._validar_gramatica()
             if not self.es_cnf():
                 self._convertir_a_cnf()
+                self.convertida = True
             self._validar_cnf()
         except ValueError as e:
             raise ValueError(f"Error a la gramàtica: {e}") from e
@@ -30,14 +33,8 @@ class Gramatica:
         """
         Crea un diccionari per accedir als símbols per índex i viceversa.
         """
-        self.simbols_index = {
-            s: i for i, s in enumerate(self.simbols)
-        }
-
-        self.index_simbols_inici = [
-            self.simbols_index[s]
-            for s in self.inici
-        ]
+        self.simbols_index = {s: i for i, s in enumerate(self.simbols)}
+        self.index_simbols_inici = [self.simbols_index[s] for s in self.inici]
 
     def _separar_transformacions(self):
         """
@@ -60,13 +57,7 @@ class Gramatica:
         self.transformacions_binaries_indexades = []
 
         for Rj, Rb, Rc in self.transformacions_binaries:
-            self.transformacions_binaries_indexades.append(
-                (
-                    self.simbols_index[Rj],
-                    self.simbols_index[Rb],
-                    self.simbols_index[Rc]
-                )
-            )    
+            self.transformacions_binaries_indexades.append((self.simbols_index[Rj], self.simbols_index[Rb], self.simbols_index[Rc]))    
 
     def _es_terminal(self, produccio):
         """
@@ -288,5 +279,361 @@ class Gramatica:
 
         self.transformacions = noves_trans
 
-                    
+    def __str__(self):
+            """
+            Retorna una representació llegible de la gramàtica en CNF.
+            Les produccions s'agrupen per símbol esquerra i s'ordenen:
+            primer els símbols inicials, després la resta alfabèticament.
+            """
+            # Agrupa produccions per símbol esquerra
+            grups = {}
+            for prod in self.transformacions:
+                esquerra = prod[0]
+                dreta = " ".join(
+                    f"'{s}'" if s == ' ' else s
+                    for s in prod[1:]
+                )
+                grups.setdefault(esquerra, []).append(dreta)
+    
+            # Ordena: símbols inicials primer, després la resta
+            ordre = self.inici + sorted(grups.keys() - set(self.inici))
+    
+            lines = [f"Gramàtica CNF  (inici: {self.inici})"]
+            lines.append("-" * 40)
+            for simbol in ordre:
+                if simbol in grups:
+                    for dreta in sorted(grups[simbol]):
+                        lines.append(f"  {simbol} -> {dreta}")
+            return "\n".join(lines)
+                     
         
+
+class GramaticaProbabilistica(Gramatica):
+    """
+    Subclasse de Gramatica que admet probabilitats a les produccions.
+    Format de les transformacions:
+      - Terminal:  ('A', 'a', prob)       p.ex. ('A', 'a', 0.6)
+      - Binaria:   ('S', 'A', 'B', prob)  p.ex. ('S', 'A', 'B', 0.9)
+    Les probabilitats de totes les produccions d'un mateix no-terminal
+    han de sumar 1.0 (es comprova amb una tolerancia de 1e-6).
+    La conversio a CNF propaga les probabilitats correctament.
+    """
+ 
+    def __init__(self, simbols, inici, transformacions):
+        # Separem la probabilitat de cada produccio ABANS de qualsevol conversio.
+        # _prob_map: (esquerra, *dreta) -> prob  i s'actualitza a cada pas.
+        self._prob_map = {}
+        trans_sense_prob = []
+ 
+        for prod in transformacions:
+            if isinstance(prod[-1], float):
+                prob = prod[-1]
+                prod_sense = prod[:-1]
+            else:
+                prob = 1.0
+                prod_sense = prod
+            trans_sense_prob.append(prod_sense)
+            self._prob_map[prod_sense] = prob
+ 
+        # Inicialitzem els atributs basics del pare SENSE cridar la seva
+        # pipeline de conversio: ho fem nosaltres amb propagacio de probs.
+        self.simbols = set(simbols)
+        self.inici = inici
+        self.transformacions = set(trans_sense_prob)
+        self.convertida = False
+ 
+        try:
+            self._validar_gramatica()
+            self._validar_probabilitats()
+            if not self.es_cnf():
+                self._convertir_a_cnf_prob()
+                self.convertida = True
+            self._validar_cnf()
+        except ValueError as e:
+            raise ValueError(f"Error a la gramatica: {e}") from e
+ 
+        self._crear_index()
+        self._separar_transformacions()
+        self._indexar_transformacions_binaries_prob()
+        self._preparar_terminals_prob()
+ 
+    # ------------------------------------------------------------------
+    # Validacio
+    # ------------------------------------------------------------------
+ 
+    def _validar_probabilitats(self):
+        """
+        Comprova que les probabilitats de cada no-terminal sumin 1.0.
+        Nomes es validen les produccions originals del _prob_map.
+        """
+        sumes = {}
+        for prod, prob in self._prob_map.items():
+            if not (0.0 <= prob <= 1.0):
+                raise ValueError(
+                    f"La probabilitat {prob} de la produccio {prod} ha de ser entre 0 i 1."
+                )
+            esquerra = prod[0]
+            sumes[esquerra] = sumes.get(esquerra, 0.0) + prob
+ 
+        for simbol, suma in sumes.items():
+            if abs(suma - 1.0) > 1e-6:
+                raise ValueError(
+                    f"Les probabilitats del simbol '{simbol}' sumen {suma:.6f}, han de sumar 1.0."
+                )
+ 
+    # ------------------------------------------------------------------
+    # Conversio a CNF amb propagacio de probabilitats
+    # ------------------------------------------------------------------
+ 
+    def _convertir_a_cnf_prob(self):
+        self._eliminar_epsilon_prob()
+        self._eliminar_unitaries_prob()
+        self._eliminar_simbols_inutils()
+        self._prob_map = {p: v for p, v in self._prob_map.items() if p in self.transformacions}
+        self._substituir_terminals_barrejats_prob()
+        self._binaritzar_prob()
+ 
+    def _eliminar_epsilon_prob(self):
+        """
+        Elimina les produccions epsilon propagant les probabilitats.
+        Per a cada simbol anulable, calcula la seva probabilitat d'epsilon
+        (prob_eps[A] = prob que A generi la cadena buida).
+        Per a cada produccio A -> X1 X2 ... Xn, genera totes les combinacions
+        d'omissio dels simbols anulables, multiplicant la prob de la produccio
+        per la prob d'epsilon de cada simbol omes i per (1 - prob_eps) dels
+        que no s'ometen (per evitar doble comptatge).
+        """
+        # --- Calcul de prob_eps[A]: prob que A derives epsilon ---
+        # Inicialitzem amb les epsilon directes
+        prob_eps = {}
+        for prod, prob in list(self._prob_map.items()):
+            if len(prod) == 2 and prod[1] == ' ':
+                prob_eps[prod[0]] = prob_eps.get(prod[0], 0.0) + prob
+ 
+        # Propagacio: A -> B C on B i C son anulables
+        # Iterem fins a convergencia
+        canvi = True
+        while canvi:
+            canvi = False
+            for prod, prob in self._prob_map.items():
+                esquerra = prod[0]
+                dreta = prod[1:]
+                if dreta and all(s in prob_eps for s in dreta):
+                    # prob que tots els simbols de la dreta generin epsilon
+                    contribucio = prob * 1.0
+                    for s in dreta:
+                        contribucio *= prob_eps[s]
+                    antiga = prob_eps.get(esquerra, 0.0)
+                    nova = antiga + contribucio
+                    if abs(nova - antiga) > 1e-12:
+                        prob_eps[esquerra] = nova
+                        canvi = True
+ 
+        anulables = set(prob_eps.keys())
+ 
+        # --- Generacio de noves produccions ---
+        noves_trans  = set()
+        nou_prob_map = {}
+ 
+        for prod, prob_prod in self._prob_map.items():
+            if len(prod) == 2 and prod[1] == ' ':
+                continue  # les epsilon originals les tractem al final
+ 
+            dreta = prod[1:]
+            posicions_anulables = [i for i, s in enumerate(dreta) if s in anulables]
+ 
+            # Per a cada subconjunt de simbols anulables que s'ometen
+            for mida in range(len(posicions_anulables) + 1):
+                for omesos in itertools.combinations(posicions_anulables, mida):
+                    nova_dreta = tuple(s for i, s in enumerate(dreta) if i not in omesos)
+                    if not nova_dreta:
+                        continue  # seria epsilon, la tractem al final
+ 
+                    # Probabilitat de la nova produccio:
+                    # prob_prod * prod(prob_eps[s] per s omes)
+                    #           * prod((1-prob_eps[s]) per s anulable no omes)
+                    p = prob_prod
+                    for i, s in enumerate(dreta):
+                        if s in anulables:
+                            if i in omesos:
+                                p *= prob_eps[s]
+                            else:
+                                p *= (1.0 - prob_eps[s])
+ 
+                    nova_prod = (prod[0],) + nova_dreta
+                    noves_trans.add(nova_prod)
+                    # Si la mateixa produccio apareix per camins diferents, sumem
+                    nou_prob_map[nova_prod] = nou_prob_map.get(nova_prod, 0.0) + p
+ 
+        # Afegim epsilon per als simbols inicials que eren anulables
+        for s in self.inici:
+            if s in anulables:
+                prod_eps = (s, ' ')
+                noves_trans.add(prod_eps)
+                nou_prob_map[prod_eps] = prob_eps[s]
+ 
+        self.transformacions = noves_trans
+        self._prob_map = nou_prob_map
+ 
+        # Renormalitzem: despres deliminar epsilons, les probs de cada
+        # no-terminal han de tornar a sumar 1.0
+        sumes = {}
+        for prod in self._prob_map:
+            sumes[prod[0]] = sumes.get(prod[0], 0.0) + self._prob_map[prod]
+        self._prob_map = {prod: prob / sumes[prod[0]] for prod, prob in self._prob_map.items() if sumes[prod[0]] > 0}
+ 
+    def _eliminar_unitaries_prob(self):
+        """
+        Elimina les produccions unitaries A -> B propagant probabilitats.
+        Si hi ha el cami A ->p1 B ->p2 C ->p3 a, genera A -> a [p1*p2*p3].
+        Implementat com BFS/DFS sobre el graf de produccions unitaries,
+        acumulant el producte de probabilitats al llarg del cami.
+        """
+        no_terminals = self.simbols
+        noves_trans  = set()
+        nou_prob_map = {}
+ 
+        for origen in no_terminals:
+            # cua: (simbol_actual, prob_acumulada)
+            visitats = {origen: 1.0}
+            cua = [(origen, 1.0)]
+ 
+            while cua:
+                actual, prob_acum = cua.pop()
+                for prod, prob in self._prob_map.items():
+                    if prod[0] != actual:
+                        continue
+                    if len(prod) == 2 and prod[1] in no_terminals:
+                        # Produccio unitaria: continuem el cami
+                        dest = prod[1]
+                        nova_prob = prob_acum * prob
+                        if dest not in visitats or visitats[dest] < nova_prob:
+                            visitats[dest] = nova_prob
+                            cua.append((dest, nova_prob))
+                    else:
+                        # Produccio no unitaria: generem la nova regla
+                        nova_prod = (origen,) + prod[1:]
+                        p = prob_acum * prob
+                        noves_trans.add(nova_prod)
+                        nou_prob_map[nova_prod] = nou_prob_map.get(nova_prod, 0.0) + p
+ 
+        self.transformacions = noves_trans
+        self._prob_map = nou_prob_map
+ 
+    def _substituir_terminals_barrejats_prob(self):
+        """
+        Substitueix terminals dins de produccions llargues per simbols auxiliars T_x.
+        Les regles auxiliars T_x -> terminal tenen prob 1.0 (nomes una alternativa).
+        La prob de la regla original es conserva intacta a la nova regla binaria.
+        """
+        noves_trans  = set()
+        nou_prob_map = {}
+        mapa_terminals = {}
+        comptador = 0
+ 
+        for prod, prob in self._prob_map.items():
+            if len(prod) > 2:
+                prod_llista = list(prod)
+                for i in range(1, len(prod_llista)):
+                    if prod_llista[i] not in self.simbols:
+                        terminal = prod_llista[i]
+                        if terminal not in mapa_terminals:
+                            nou_sim, comptador = self._nou_simbol("T", comptador)
+                            prod_aux = (nou_sim, terminal)
+                            noves_trans.add(prod_aux)
+                            nou_prob_map[prod_aux] = 1.0
+                            mapa_terminals[terminal] = nou_sim
+                        prod_llista[i] = mapa_terminals[terminal]
+                nova_prod = tuple(prod_llista)
+                noves_trans.add(nova_prod)
+                nou_prob_map[nova_prod] = prob
+            else:
+                noves_trans.add(prod)
+                nou_prob_map[prod] = prob
+ 
+        self.transformacions = noves_trans
+        self._prob_map = nou_prob_map
+ 
+    def _binaritzar_prob(self):
+        """
+        Binaritza produccions de longitud > 3 introduint simbols auxiliars X_x.
+        La prob de la regla original va a la primera regla binaria generada.
+        Les regles auxiliars X_x -> B C tenen prob 1.0 (nomes una alternativa).
+        """
+        noves_trans  = set()
+        nou_prob_map = {}
+        comptador = 0
+ 
+        for prod, prob in self._prob_map.items():
+            if len(prod) > 3:
+                prod_llista = list(prod)
+                esquerra    = prod_llista[0]
+                prob_actual = prob  # la prob original va a la primera regla
+ 
+                for idx in range(1, len(prod_llista) - 2):
+                    nou_sim, comptador = self._nou_simbol("X", comptador)
+                    nova_prod = (esquerra, prod_llista[idx], nou_sim)
+                    noves_trans.add(nova_prod)
+                    nou_prob_map[nova_prod] = prob_actual
+                    prob_actual = 1.0  # les regles auxiliars sempre tenen prob 1.0
+                    esquerra    = nou_sim
+ 
+                ultima_prod = (esquerra, prod_llista[-2], prod_llista[-1])
+                noves_trans.add(ultima_prod)
+                nou_prob_map[ultima_prod] = prob_actual
+            else:
+                noves_trans.add(prod)
+                nou_prob_map[prod] = prob
+ 
+        self.transformacions = noves_trans
+        self._prob_map = nou_prob_map
+ 
+    # ------------------------------------------------------------------
+    # Indexacio amb probabilitat
+    # ------------------------------------------------------------------
+ 
+    def _indexar_transformacions_binaries_prob(self):
+        """
+        Indexa les produccions binaries afegint la probabilitat com a 4t element:
+        (index_j, index_b, index_c, prob)
+        """
+        self.transformacions_binaries_indexades = []
+ 
+        for Rj, Rb, Rc in self.transformacions_binaries:
+            prob = self._prob_map.get((Rj, Rb, Rc), 1.0)
+            self.transformacions_binaries_indexades.append(
+                (self.simbols_index[Rj], self.simbols_index[Rb], self.simbols_index[Rc], prob)
+            )
+ 
+    def _preparar_terminals_prob(self):
+        """
+        Reescriu la llista de terminals incloent la probabilitat:
+        (simbol, terminal, prob)
+        """
+        terminals_amb_prob = []
+        for prod in self.transformacions_terminals:
+            Rj, terminal = prod
+            prob = self._prob_map.get((Rj, terminal), 1.0)
+            terminals_amb_prob.append((Rj, terminal, prob))
+        self.transformacions_terminals = terminals_amb_prob
+ 
+    def __str__(self):
+        """
+        Estén el __str__ del pare afegint la probabilitat a cada produccio.
+        """
+        grups = {}
+        for prod in self.transformacions:
+            esquerra = prod[0]
+            prob = self._prob_map.get(prod, 1.0)
+            dreta = " ".join(f"'{s}'" if s == ' ' else s for s in prod[1:])
+            grups.setdefault(esquerra, []).append((dreta, prob))
+ 
+        ordre = self.inici + sorted(grups.keys() - set(self.inici))
+ 
+        lines = [f"Gramatica Probabilistica CNF  (inici: {self.inici})"]
+        lines.append("-" * 40)
+        for simbol in ordre:
+            if simbol in grups:
+                for dreta, prob in sorted(grups[simbol]):
+                    lines.append(f"  {simbol} -> {dreta:10s} [{prob:.4f}]")
+        return "\n".join(lines)
