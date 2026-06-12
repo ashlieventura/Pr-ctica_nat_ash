@@ -1,0 +1,163 @@
+Problema 1
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: BOOLEA simple: ab acceptat
+arbre: True
+resposta correcta: True
+
+Problema 2
+paraula: 'aaaa'
+simbols: ['S', 'X', 'A']
+inici: ['S']
+transformacions: [
+  ('S', 'X', 'X'),
+  ('X', 'A', 'A'),
+  ('A', 'a')
+]
+descripcio: BOOLEA arbre balancejat 4 a's
+arbre: True
+resposta correcta: True
+
+Problema 3
+paraula: 'abc'
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 'C'),
+  ('A', 'a'),
+  ('B', 'b'),
+  ('C', 'c')
+]
+descripcio: BOOLEA binaritzacio longitud 3
+arbre: True
+resposta correcta: True
+
+Problema 4
+paraula: 'a'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A'),
+  ('A', 'B'),
+  ('B', 'a')
+]
+descripcio: BOOLEA cadena unitaries S->A->B->a
+arbre: True
+resposta correcta: True
+
+Problema 5
+paraula: 'ba'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: BOOLEA rebutjat: no hi ha arbre
+arbre: True
+resposta correcta: False
+
+Problema 6
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.0),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0)
+]
+descripcio: PROB tot 1.0, arbre prob 1.0
+arbre: True
+resposta correcta: 1.0
+
+Problema 7
+paraula: 'ab'
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 0.6),
+  ('S', 'A', 'C', 0.4),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0),
+  ('C', 'b', 1.0)
+]
+descripcio: PROB ambigua, arbre mes probable max 0.6
+arbre: True
+resposta correcta: 0.6
+
+Problema 8
+paraula: 'aaa'
+simbols: ['S', 'A']
+inici: ['S']
+transformacions: [
+  ('S', 'S', 'A', 0.4),
+  ('S', 'A', 0.6),
+  ('A', 'a', 1.0)
+]
+descripcio: PROB recursiva S->SA, arbre paraula aaa
+arbre: True
+resposta correcta: 0.096
+
+Problema 9
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.0),
+  ('A', 'a', 1.0),
+  ('B', 'b', 0.6),
+  ('B', ' ', 0.4)
+]
+descripcio: PROB-CNF B anulable, arbre 'ab' renormalitzat
+arbre: True
+resposta correcta: 0.6
+
+Problema 10
+paraula: 'bc'
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 0.7),
+  ('S', 'B', 'C', 0.3),
+  ('A', 'B', 'C', 1.0),
+  ('B', 'b', 1.0),
+  ('C', 'c', 1.0)
+]
+descripcio: PROB-CNF unitaria a binaria, arbre max
+arbre: True
+resposta correcta: 1.0
+
+Problema 11
+paraula: 'abcd'
+simbols: ['S', 'A', 'B', 'C', 'D']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 'C', 'D'),
+  ('A', 'a'),
+  ('B', 'b'),
+  ('C', 'c'),
+  ('D', 'd')
+]
+descripcio: BOOLEA binaritzacio longitud 4
+arbre: True
+resposta correcta: True
+
+Problema 12
+paraula: 'a'
+simbols: ['S', 'A', 'B']
+inici: ['S', 'A']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: BOOLEA multiples inicials, 'a' via A
+arbre: True
+resposta correcta: True

@@ -1,0 +1,175 @@
+Problema 1 | BOOLEA simple: ab acceptat
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B
+  A -> a
+  B -> b
+  Paraula: 'ab'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        A -> 'a'
+        B -> 'b'
+
+Problema 2 | BOOLEA arbre balancejat 4 a's
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> X X
+  A -> a
+  X -> A A
+  Paraula: 'aaaa'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        X
+          A -> 'a'
+          A -> 'a'
+        X
+          A -> 'a'
+          A -> 'a'
+
+Problema 3 | BOOLEA binaritzacio longitud 3
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A X_1
+  A -> a
+  B -> b
+  C -> c
+  X_1 -> B C
+  Paraula: 'abc'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        A -> 'a'
+        X_1
+          B -> 'b'
+          C -> 'c'
+
+Problema 4 | BOOLEA cadena unitaries S->A->B->a
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> a
+  Paraula: 'a'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S -> 'a'
+
+Problema 5 | BOOLEA rebutjat: no hi ha arbre
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B
+  A -> a
+  B -> b
+  Paraula: 'ba'
+  Resultat: False | Resposta correcta: False | OK
+  Arbre de derivació:
+      (sense arbre)
+
+Problema 6 | PROB tot 1.0, arbre prob 1.0
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B        [1.0000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  Paraula: 'ab'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+  Arbre de derivació:
+      S
+        A -> 'a'
+        B -> 'b'
+
+Problema 7 | PROB ambigua, arbre mes probable max 0.6
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B        [0.6000]
+  S -> A C        [0.4000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  C -> b          [1.0000]
+  Paraula: 'ab'
+  Resultat: 0.600000 | Resposta correcta: 0.600000 | OK
+  Arbre de derivació:
+      S
+        A -> 'a'
+        B -> 'b'
+
+Problema 8 | PROB recursiva S->SA, arbre paraula aaa
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> S A        [0.4000]
+  S -> a          [0.6000]
+  A -> a          [1.0000]
+  Paraula: 'aaa'
+  Resultat: 0.096000 | Resposta correcta: 0.096000 | OK
+  Arbre de derivació:
+      S
+        S
+          S -> 'a'
+          A -> 'a'
+        A -> 'a'
+
+Problema 9 | PROB-CNF B anulable, arbre 'ab' renormalitzat
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A B        [0.6000]
+  S -> a          [0.4000]
+  A -> a          [1.0000]
+  B -> b          [1.0000]
+  Paraula: 'ab'
+  Resultat: 0.600000 | Resposta correcta: 0.600000 | OK
+  Arbre de derivació:
+      S
+        A -> 'a'
+        B -> 'b'
+
+Problema 10 | PROB-CNF unitaria a binaria, arbre max
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> B C        [1.0000]
+  B -> b          [1.0000]
+  C -> c          [1.0000]
+  Paraula: 'bc'
+  Resultat: 1.000000 | Resposta correcta: 1.000000 | OK
+  Arbre de derivació:
+      S
+        B -> 'b'
+        C -> 'c'
+
+Problema 11 | BOOLEA binaritzacio longitud 4
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> A X_1
+  A -> a
+  B -> b
+  C -> c
+  D -> d
+  X_1 -> B X_2
+  X_2 -> C D
+  Paraula: 'abcd'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        A -> 'a'
+        X_1
+          B -> 'b'
+          X_2
+            C -> 'c'
+            D -> 'd'
+
+Problema 12 | BOOLEA multiples inicials, 'a' via A
+Gramàtica CNF  (inici: ['S', 'A'])
+----------------------------------------
+  S -> A B
+  A -> a
+  B -> b
+  Paraula: 'a'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      A -> 'a'
+

@@ -1,0 +1,149 @@
+Problema 1
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: BOOLEA: ab acceptat
+resposta correcta: True
+
+Problema 2
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.0),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0)
+]
+descripcio: PROB: ab amb prob 1.0
+resposta correcta: 1.0
+
+Problema 3
+paraula: 'aa'
+simbols: ['S', 'A']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'A'),
+  ('A', 'a')
+]
+descripcio: BOOLEA: aa acceptat
+resposta correcta: True
+
+Problema 4
+paraula: 'ab'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.0),
+  ('A', 'a', 0.7),
+  ('A', 'b', 0.3),
+  ('B', 'b', 1.0)
+]
+descripcio: PROB: prob composta 0.7
+resposta correcta: 0.7
+
+Problema 5
+paraula: 'ba'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: BOOLEA: ba rebutjat
+resposta correcta: False
+
+Problema 6
+paraula: 'ba'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.0),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0)
+]
+descripcio: PROB: ba prob 0.0
+resposta correcta: 0.0
+
+Problema 7
+paraula: 'a'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', ' '),
+  ('B', 'b')
+]
+descripcio: BOOLEA: epsilon B, 'a' acceptat
+resposta correcta: True
+
+Problema 8
+paraula: 'a'
+simbols: ['S', 'A', 'B']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 1.0),
+  ('A', 'a', 1.0),
+  ('B', 'b', 0.6),
+  ('B', ' ', 0.4)
+]
+descripcio: PROB: epsilon B amb prob, 'a'
+resposta correcta: 0.4
+
+Problema 9
+paraula: 'abc'
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 'C'),
+  ('A', 'a'),
+  ('B', 'b'),
+  ('C', 'c')
+]
+descripcio: BOOLEA: binaritzacio longitud 3
+resposta correcta: True
+
+Problema 10
+paraula: 'abc'
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 'C', 1.0),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0),
+  ('C', 'c', 1.0)
+]
+descripcio: PROB: binaritzacio longitud 3
+resposta correcta: 1.0
+
+Problema 11
+paraula: 'a'
+simbols: ['S', 'A', 'B']
+inici: ['S', 'A']
+transformacions: [
+  ('S', 'A', 'B'),
+  ('A', 'a'),
+  ('B', 'b')
+]
+descripcio: BOOLEA: multiples inicials, 'a' via A
+resposta correcta: True
+
+Problema 12
+paraula: 'ab'
+simbols: ['S', 'A', 'B', 'C']
+inici: ['S']
+transformacions: [
+  ('S', 'A', 'B', 0.6),
+  ('S', 'A', 'C', 0.4),
+  ('A', 'a', 1.0),
+  ('B', 'b', 1.0),
+  ('C', 'b', 1.0)
+]
+descripcio: PROB: ambigua, max 0.6
+resposta correcta: 0.6

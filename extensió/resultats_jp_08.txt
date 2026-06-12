@@ -1,0 +1,223 @@
+Problema 1 | SN + verb intransitiu "the dog barks"
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP
+  Det -> the
+  N -> dog
+  NP -> Det N
+  VP -> barks
+  Paraula: '['the', 'dog', 'barks']'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        NP
+          Det -> 'the'
+          N -> 'dog'
+        VP -> 'barks'
+
+Problema 2 | verb transitiu amb objecte directe
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP
+  Det -> the
+  N -> cat
+  N -> dog
+  NP -> Det N
+  V -> sees
+  VP -> V NP
+  Paraula: '['the', 'cat', 'sees', 'the', 'dog']'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        NP
+          Det -> 'the'
+          N -> 'cat'
+        VP
+          V -> 'sees'
+          NP
+            Det -> 'the'
+            N -> 'dog'
+
+Problema 3 | SN amb adjectiu "a small dog runs"
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP
+  Adj -> small
+  Det -> a
+  N -> dog
+  NP -> Det Nom
+  Nom -> Adj N
+  VP -> runs
+  Paraula: '['a', 'small', 'dog', 'runs']'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        NP
+          Det -> 'a'
+          Nom
+            Adj -> 'small'
+            N -> 'dog'
+        VP -> 'runs'
+
+Problema 4 | pronom subjecte + objecte amb adjectiu
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP
+  Adj -> red
+  N -> apples
+  NP -> Adj N
+  NP -> she
+  V -> eats
+  VP -> V NP
+  Paraula: '['she', 'eats', 'red', 'apples']'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        NP -> 'she'
+        VP
+          V -> 'eats'
+          NP
+            Adj -> 'red'
+            N -> 'apples'
+
+Problema 5 | PROB transitiva, arbre amb probabilitat
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP      [1.0000]
+  Det -> a          [0.5000]
+  Det -> the        [0.5000]
+  N -> cat        [0.5000]
+  N -> man        [0.5000]
+  NP -> Det N      [1.0000]
+  V -> sees       [1.0000]
+  VP -> V NP       [1.0000]
+  Paraula: '['the', 'man', 'sees', 'a', 'cat']'
+  Resultat: 0.062500 | Resposta correcta: 0.062500 | OK
+  Arbre de derivació:
+      S
+        NP
+          Det -> 'the'
+          N -> 'man'
+        VP
+          V -> 'sees'
+          NP
+            Det -> 'a'
+            N -> 'cat'
+
+Problema 6 | PROB SN amb adjectiu opcional
+[GRAMÀTICA CONVERTIDA A CNF]
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP      [1.0000]
+  Adj -> old        [1.0000]
+  Det -> the        [1.0000]
+  N -> man        [1.0000]
+  NP -> Det Nom    [1.0000]
+  Nom -> Adj N      [0.5000]
+  Nom -> man        [0.5000]
+  VP -> walks      [1.0000]
+  Paraula: '['the', 'old', 'man', 'walks']'
+  Resultat: 0.500000 | Resposta correcta: 0.500000 | OK
+  Arbre de derivació:
+      S
+        NP
+          Det -> 'the'
+          Nom
+            Adj -> 'old'
+            N -> 'man'
+        VP -> 'walks'
+
+Problema 7 | AMBIGUITAT PP: "vaig veure amb el telescopi" (PP al VP)
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP      [1.0000]
+  Det -> the        [1.0000]
+  N -> man        [0.5000]
+  N -> telescope  [0.5000]
+  NP -> Det N      [0.4000]
+  NP -> NP PP      [0.2000]
+  NP -> i          [0.4000]
+  P -> with       [1.0000]
+  PP -> P NP       [1.0000]
+  V -> saw        [1.0000]
+  VP -> V NP       [0.4000]
+  VP -> VP PP      [0.6000]
+  Paraula: '['i', 'saw', 'the', 'man', 'with', 'the', 'telescope']'
+  Resultat: 0.003840
+  Arbre de derivació:
+      S
+        NP -> 'i'
+        VP
+          VP
+            V -> 'saw'
+            NP
+              Det -> 'the'
+              N -> 'man'
+          PP
+            P -> 'with'
+            NP
+              Det -> 'the'
+              N -> 'telescope'
+
+Problema 8 | MATEIXA frase, ara "l'home amb el telescopi" (PP al NP)
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP      [1.0000]
+  Det -> the        [1.0000]
+  N -> man        [0.5000]
+  N -> telescope  [0.5000]
+  NP -> Det N      [0.4000]
+  NP -> NP PP      [0.2000]
+  NP -> i          [0.4000]
+  P -> with       [1.0000]
+  PP -> P NP       [1.0000]
+  V -> saw        [1.0000]
+  VP -> V NP       [0.8000]
+  VP -> VP PP      [0.2000]
+  Paraula: '['i', 'saw', 'the', 'man', 'with', 'the', 'telescope']'
+  Resultat: 0.002560
+  Arbre de derivació:
+      S
+        NP -> 'i'
+        VP
+          V -> 'saw'
+          NP
+            NP
+              Det -> 'the'
+              N -> 'man'
+            PP
+              P -> 'with'
+              NP
+                Det -> 'the'
+                N -> 'telescope'
+
+Problema 9 | frase minima sense determinant
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP
+  N -> birds
+  NP -> birds
+  V -> fly
+  VP -> fly
+  Paraula: '['birds', 'fly']'
+  Resultat: True | Resposta correcta: True | OK
+  Arbre de derivació:
+      S
+        NP -> 'birds'
+        VP -> 'fly'
+
+Problema 10 | agramatical: falta el verb, rebutjat
+Gramàtica CNF  (inici: ['S'])
+----------------------------------------
+  S -> NP VP
+  Det -> the
+  N -> cat
+  N -> dog
+  NP -> Det N
+  V -> sees
+  VP -> V NP
+  Paraula: '['the', 'dog', 'the', 'cat']'
+  Resultat: False | Resposta correcta: False | OK
+  Arbre de derivació:
+      (sense arbre)
+
