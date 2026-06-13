@@ -43,12 +43,17 @@ class TestRunner:
 
         transformacions = ast.literal_eval(transformacions_text)
 
-        # -------- resposta correcta i descripció opcional --------
+        # -------- resposta correcta, descripció i arbre (opcionals) --------
         resposta_correcta = None
         descripcio = None
+        arbre = False
 
         if idx < len(lineas) and lineas[idx].startswith("descripcio:"):
             descripcio = lineas[idx].split(":", 1)[1].strip()
+            idx += 1
+
+        if idx < len(lineas) and lineas[idx].startswith("arbre:"):
+            arbre = ast.literal_eval(lineas[idx].split(":", 1)[1].strip())
             idx += 1
 
         if idx < len(lineas) and lineas[idx].startswith("resposta correcta:"):
@@ -62,6 +67,7 @@ class TestRunner:
             "transformacions": transformacions,
             "resposta_correcta": resposta_correcta,
             "descripcio": descripcio,
+            "arbre": arbre,
         }
 
     def _detectar_classe(self, transformacions):
@@ -103,6 +109,7 @@ class TestRunner:
                         "gramatica": gramatica,
                         "resposta_correcta": camps["resposta_correcta"],
                         "descripcio": camps["descripcio"],
+                        "arbre": camps["arbre"],
                         "error": None
                     })
                 except ValueError as e:
@@ -112,6 +119,7 @@ class TestRunner:
                         "gramatica": None,
                         "resposta_correcta": camps["resposta_correcta"],
                         "descripcio": camps["descripcio"],
+                        "arbre": camps["arbre"],
                         "error": str(e)
                     })
 
@@ -142,19 +150,35 @@ class TestRunner:
 
                 if isinstance(gramatica, GramaticaProbabilistica):
                     cky = ProbabilisticCKY(gramatica)
-                    resultat = cky.accepta_prob(problema["paraula"])
+                    if problema["arbre"]:
+                        resultat, arbre = cky.analitza_prob(problema["paraula"], reconstruir=True)
+                    else:
+                        resultat = cky.accepta_prob(problema["paraula"])
+                        arbre = None
                     esperat = problema["resposta_correcta"]
                     if esperat is not None:
                         estat = "OK" if abs(resultat - esperat) <= tolerancia else "ERROR"
-                        print(f"  Resultat: {resultat:.6f} | Resposta correcta: {esperat:.6f} | {estat}\n")
+                        print(f"  Resultat: {resultat:.6f} | Resposta correcta: {esperat:.6f} | {estat}")
                     else:
-                        print(f"  Resultat: {resultat:.6f}\n")
+                        print(f"  Resultat: {resultat:.6f}")
+                    if problema["arbre"]:
+                        print("  Arbre de derivació:")
+                        print(cky.format_arbre(arbre))
+                    print()
                 else:
                     cky = CKY(gramatica)
-                    resultat = cky.accepta(problema["paraula"])
+                    if problema["arbre"]:
+                        resultat, arbre = cky.analitza(problema["paraula"], reconstruir=True)
+                    else:
+                        resultat = cky.accepta(problema["paraula"])
+                        arbre = None
                     esperat = problema["resposta_correcta"]
                     if esperat is not None:
                         estat = "OK" if resultat == esperat else "ERROR"
-                        print(f"  Resultat: {resultat} | Resposta correcta: {esperat} | {estat}\n")
+                        print(f"  Resultat: {resultat} | Resposta correcta: {esperat} | {estat}")
                     else:
-                        print(f"  Resultat: {resultat}\n")
+                        print(f"  Resultat: {resultat}")
+                    if problema["arbre"]:
+                        print("  Arbre de derivació:")
+                        print(cky.format_arbre(arbre))
+                    print()
