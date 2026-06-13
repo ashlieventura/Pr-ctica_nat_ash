@@ -190,6 +190,12 @@ class CKY:
 
 class ProbabilisticCKY(CKY):
     def _inicialitzar_taula_prob(self, paraula):
+        """
+        Inicialitza la taula de probabilitats per a subcadenes de longitud 1.
+
+        Cada cel·la P[i, 1, j] guarda la millor probabilitat amb què el símbol j
+        pot generar el terminal situat a la posició i.
+        """
         n = len(paraula)
         r = len(self.gramatica.simbols)
         simbols_index = self.gramatica.simbols_index
@@ -208,6 +214,12 @@ class ProbabilisticCKY(CKY):
         return P
 
     def accepta_prob(self, paraula):
+        """
+        Calcula la probabilitat màxima amb què la gramàtica pot generar la paraula.
+
+        Retorna 0.0 si la paraula no es pot generar i, si es pot, la millor
+        probabilitat trobada per a qualsevol símbol inicial.
+        """
         n = len(paraula)
         if n == 0:
             return 1.0 if any((s, ' ') in self.gramatica.transformacions for s in self.gramatica.inici) else 0.0
