@@ -1,0 +1,82 @@
+Problema 1
+paraula: ['the', 'queen', 'killed', 'the', 'king', 'with', 'the', 'knife']
+simbols: ['S', 'VP', 'NP', 'PP', 'DT', 'VBD', 'VBZ', 'NN', 'IN', 'NNP']
+inici: ['S']
+transformacions: [
+  ('S', 'NP', 'VP', 1.0),
+  ('VP', 'VBD', 'NP', 0.20),
+  ('VP', 'VBZ', 'NP', 0.40),
+  ('VP', 'VP', 'PP', 0.40),
+  ('NP', 'NP', 'PP', 0.33),
+  ('NP', 'DT', 'NN', 0.25),
+  ('NP', 'NNP', 0.42),
+  ('PP', 'IN', 'NP', 1.0),
+  ('DT', 'the', 1.0),
+  ('VBD', 'killed', 1.0),
+  ('VBZ', 'kills', 1.0),
+  ('NN', 'queen', 0.15),
+  ('NN', 'king', 0.35),
+  ('NN', 'knife', 0.5),
+  ('IN', 'with', 1.0),
+  ('NNP', 'Anna', 0.3),
+  ('NNP', 'John', 0.7)
+]
+descripcio: Exercici 1, examen PLH 2025
+arbre: True
+resposta correcta: 3.28125e-05
+
+Problema 2
+paraula: ['Groucho', 'shot', 'an', 'elephant', 'in', 'his', 'pajamas']
+simbols: ['S', 'NP', 'VP', 'PP', 'DT', 'NN', 'NNS', 'IN']
+inici: ['S']
+transformacions: [
+  ('S', 'NP', 'VP', 1.0),
+  ('NP', 'DT', 'NN', 0.4),
+  ('NP', 'DT', 'NNS', 0.3),
+  ('NP', 'Groucho', 0.01),
+  ('NP', 'shot', 0.03),
+  ('NP', 'elephant', 0.04),
+  ('NP', 'NP', 'PP', 0.2),
+  ('PP', 'IN', 'NP', 1.0),
+  ('VP', 'VP', 'PP', 0.5),
+  ('VP', 'VP', 'NP', 0.4),
+  ('VP', 'shot', 0.03),
+  ('NN', 'shot', 0.02),
+  ('NN', 'elephant', 0.03),
+  ('NNS', 'pajamas', 0.02),
+  ('DT', 'an', 0.2),
+  ('DT', 'his', 0.1),
+  ('IN', 'in', 0.1)
+]
+descripcio: Exercici 2, examen PLH 2023
+arbre: True
+resposta correcta: 8.64e-12
+
+Problema 3
+paraula: ['John', 'saw', 'your', 'brother', 'playing', 'with', 'his', 'glasses']
+simbols: ['S', 'NP', 'VP', 'PP', 'AP', 'NNP', 'NN', 'NNS', 'PRP$', 'IN', 'VBD', 'VBG']
+inici: ['S']
+transformacions: [
+  ('S', 'NP', 'VP', 1.0),
+  ('NP', 'PRP', 'NN', 0.5),
+  ('NP', 'PRP', 'NNS', 0.3),
+  ('NP', 'NNP', 0.1),
+  ('NP', 'NP', 'AP', 0.1),
+  ('PP', 'IN', 'NP', 1.0),
+  ('AP', 'VBG', 'PP', 1.0),
+  ('VP', 'VBD', 'NP', 0.4),
+  ('VP', 'VP', 'AP', 0.6),
+  ('NNP', 'John', 1.0),
+  ('NN', 'brother', 1.0),
+  ('NNS', 'glasses', 1.0),
+  ('PRP', 'your', 0.6),
+  ('PRP', 'his', 0.4),
+  ('IN', 'with', 1.0),
+  ('VBD', 'saw', 1.0),
+  ('VBG', 'playing', 1.0)
+]
+descripcio: Exercici 2, examen 2024
+arbre: True
+resposta correcta: 0.0
+
+

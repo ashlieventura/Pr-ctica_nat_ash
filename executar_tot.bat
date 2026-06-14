@@ -6,5 +6,5 @@ python main.py jp_04_errors_gramatica.txt --output resultats_jp_04.txt
 python main.py jp_05_barrejat.txt --output resultats_jp_05.txt
 python main.py jp_06_conversio_cnf_prob.txt --output resultats_jp_06.txt
 python main.py jp_07_arbre.txt --output resultats_jp_07.txt
-python main.py jp_08_pln.txt --output resultats_jp_08.txt
+python main.py jp_08_plh.txt --output resultats_jp_08.txt
 pause
