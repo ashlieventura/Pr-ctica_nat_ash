@@ -161,3 +161,15 @@ transformacions: [
 descripcio: BOOLEA multiples inicials, 'a' via A
 arbre: True
 resposta correcta: True
+
+Problema 13
+paraula: 'aaaaaa'
+simbols: ['S']
+inici: ['S']
+transformacions: [
+  ('S', 'S', 'S', 0.3),
+  ('S', 'a', 0.7)
+]
+descripcio: recursiva ambigua S->SS, paraula llarga
+arbre: True
+resposta correcta: 0.000286

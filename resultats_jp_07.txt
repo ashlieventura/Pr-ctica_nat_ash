@@ -173,3 +173,23 @@ Gramàtica CNF  (inici: ['S', 'A'])
   Arbre de derivació:
       A -> 'a'
 
+Problema 13 | recursiva ambigua S->SS, paraula llarga
+Gramatica Probabilistica CNF  (inici: ['S'])
+----------------------------------------
+  S -> S S        [0.3000]
+  S -> a          [0.7000]
+  Paraula: 'aaaaaa'
+  Resultat: 0.000286 | Resposta correcta: 0.000286 | OK
+  Arbre de derivació:
+      S
+        S -> 'a'
+        S
+          S -> 'a'
+          S
+            S -> 'a'
+            S
+              S -> 'a'
+              S
+                S -> 'a'
+                S -> 'a'
+

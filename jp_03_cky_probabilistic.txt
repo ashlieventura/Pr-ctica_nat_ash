@@ -173,3 +173,14 @@ transformacions: [
 ]
 descripcio: epsilon directa probabilistica
 resposta correcta: 1.0
+
+Problema 15
+paraula: 'aaaaaa'
+simbols: ['S']
+inici: ['S']
+transformacions: [
+  ('S', 'S', 'S', 0.3),
+  ('S', 'a', 0.7)
+]
+descripcio: recursiva ambigua S->SS, paraula llarga
+resposta correcta: 0.000286
